@@ -3,20 +3,22 @@ class TextHandler:
         self.words = []
 
     def add_words(self, text):
-        self.words.append(text)
-        return self.words
-
+        self.words.extend(text.split())
+        
     def get_shortest_words(self):
-        min_words = []
-        res = min([len(w)for w in self.words])
-        for w in self.words:
-            if len(w) == res:
-                min_words.append(w)
-        return min_words
+        if not self.words:
+            return []
+        
+        min_length = min(len(word) for word in self.words)
+        return [word for word in self.words if len(word) == min_length]
+    
 
     def get_longest_words(self):
-        res = max([len(w)for w in self.words])
-        return list(w for w in self.words if len(w) == res)
+        if not self.words:
+            return []
+        
+        max_length = max(len(word) for word in self.words)
+        return [word for word in self.words if len(word) == max_length]
     
 
 texthandler = TextHandler()
