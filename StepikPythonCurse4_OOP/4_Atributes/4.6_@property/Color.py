@@ -11,3 +11,5 @@ class Color:
         self.r = int(value[0:2], 16)
         self.g = int(value[2:4], 16)
         self.b = int(value[4:6], 16)
+
+

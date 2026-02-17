@@ -1,8 +1,5 @@
 from functools import singledispatchmethod
 
-from pygments import formatter
-
-
 class Formatter:
 
     @singledispatchmethod
