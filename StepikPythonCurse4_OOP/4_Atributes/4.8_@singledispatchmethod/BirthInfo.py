@@ -38,8 +38,12 @@ class BirthInfo:
         return age
 
     
-birthday = date(2020, 9, 18)
-today = date.today()
-birthinfo = BirthInfo(birthday)
+birthinfo1 = BirthInfo('2020-09-18')
+birthinfo2 = BirthInfo(date(2010, 10, 10))
+birthinfo3 = BirthInfo([2016, 1, 1])
+
+print(birthinfo1.birth_date)
+print(birthinfo2.birth_date)
+print(birthinfo3.birth_date)
 
     
