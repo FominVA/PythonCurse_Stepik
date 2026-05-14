@@ -1,26 +1,51 @@
 class FieldTracker:
     def __init__(self):
-        self._values = {
-            field: getattr(self, field)
-            for field in self.fields
+        # Исходные значения атрибутов
+        self._original_values = {
+            field: getattr(self, field) for field in self.fields
         }
+        # Список изменённых полей в порядке их первого изменения
+        self._changed_order = []
+        # Множество для быстрой проверки, было ли поле уже отмечено как изменённое
+        self._changed_set = set()
 
-    def base(self, field):
-        return self._values[field]
+    def base(self, atr):
+        if atr in self._changed_set:
+            return self._original_values[atr]
+        else:
+            return getattr(self, atr)
 
-    def has_changed(self, field):
-        return self._values[field] != getattr(self, field)
+    def has_changed(self, atr):
+        return atr in self._changed_set
 
     def changed(self):
-        return {
-            field: self.base(field)
-            for field in self.fields
-            if self.has_changed(field)
-        }
+        # Формируем словарь в порядке первого изменения полей
+        result = {}
+        for field in self._changed_order:
+            if field not in result:
+                result[field] = self._original_values[field]
+        return result
 
     def save(self):
+        # Обновляем исходные значения до текущих
         for field in self.fields:
-            self._values[field] = getattr(self, field)
+            self._original_values[field] = getattr(self, field)
+        # Сбрасываем отслеживание изменений
+        self._changed_order.clear()
+        self._changed_set.clear()
+
+    def __setattr__(self, name, value):
+        # Проверяем, инициализирован ли трекер и отслеживается ли поле
+        if hasattr(self, '_original_values') and name in self.fields:
+            current_value = getattr(self, name, None)
+            # Если значение изменилось
+            if current_value != value:
+                # Если поле ещё не отмечено как изменённое, добавляем в порядок и множество
+                if name not in self._changed_set:
+                    self._changed_order.append(name)
+                    self._changed_set.add(name)
+        # Устанавливаем атрибут
+        super().__setattr__(name, value)
 
 class Point(FieldTracker):
     fields = ('x', 'y', 'z')
