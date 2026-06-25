@@ -1,0 +1,13 @@
+from dataclasses import dataclass
+@dataclass()
+class ArithmeticProgression:
+    el: num
+
+progression = ArithmeticProgression(0, 1)
+
+for elem in progression:
+    if elem > 10:
+        break
+    print(elem, end=' ')
+
+
